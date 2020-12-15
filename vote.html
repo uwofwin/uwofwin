@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html class="portrait">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>V-LEVEL Vote</title>
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <link type="text/css" href="static/css" rel="stylesheet">
+    <link type="text/css" href="static/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/vote.css" />
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+    <link type="text/css" href="static/play.built.e5ed944c.cache.css" rel="stylesheet" media="all">
+    <link type="text/css" href="static/global_main.css" rel="stylesheet">
+    <script type="text/javascript" src="static/jquery-1.8.1.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap.min.js"></script>
+    <script src="web3.min.js"></script>
+</head>
+
+<body>
+    <div class="container-fluid cst_navcontainer cst_navfixed c-section S_cbsect_391e300e " style="background-color: transparent; z-index: 1060;">
+        <nav class="navbar" style="line-height: 80px;padding-left: 20px;">
+            <a href="index.html" style="color: white;">
+                <i style="font-size:16px;" class="fa fa-arrow-left"></i>
+                <span style="margin-left: 10px;" class="lan-70">返回</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="container" style="color: white;padding-top: 50px;">
+        <div class="cst_sectionBGwrap c-div cbdiv_7e01c45d">
+            <div class="cst_sectionBG cst_BGfixed c-div cbdiv_c385b961" src="static/bg_top.jpg" style="background-image: url(static/bg_top.jpg); ">
+                <div class="cst_overlay c-div cbdiv_8264f72e"></div>
+            </div>
+        </div>
+        <div class="cst_titleDivider c-div S_cbdiv_07dc1a73">
+            <hr class="cst_leftspliteline S_cb_oth_40e51025">
+            <div class="cst_textWrap c-div S_cbdiv_1c4e177e">
+                <h3 class="cst_title c-heading youziku-e094346a5670469eaacd0dcc3afa6f0d S_cbhead_608957d7 lan-68" fontid="46865" accesskey="e094346a5670469eaacd0dcc3afa6f0d">V级投票</h3>
+                <h5 class="cst_subtitle c-heading S_cbhead_f8d4bdf3">V-Level Votes</h5>
+            </div>
+            <hr class="cst_rightspliteline S_cb_oth_e5604bf1">
+        </div>
+        <!-- <div class="row">
+            <svg class="cst_svg_currentColor S_cbsvg_e0f4f000" height="24px" version="1.1" viewBox="21 237 426 24" width="426px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <desc>Created with Sketch.</desc>
+                <defs></defs>
+                <path d="M198.202,249.197 C209.352,236.163 228.762,240.497 242.089,248.941 C218.533,229.293 195.009,242.431 182.674,244.708 C176.456,245.857 170.826,242.739 163.974,242.541 C166.966,243.225 168.97,246.118 170.56,247.979 C172.211,249.908 173.5,251.304 176.348,252.491 C179.018,253.605 181.838,253.264 184.504,251.9 C187.113,250.564 191.543,245.862 194.817,245.565 C192.638,247.596 188.965,248.665 189.214,253.342 C189.414,257.107 192.248,257.581 193.27,260.18 C193.442,256.508 195.051,252.877 198.202,249.197" fill="#785240" fill-rule="evenodd" id="Fill-58" stroke="none"></path>
+                <path d="M236.75,246.763 C230.355,244.038 221.606,241.595 214.499,245.279 C208.563,248.358 206.532,252.56 204.16,259.049 C208.461,256.719 211,256.6 217.548,252.536 C221.647,249.996 228.153,244.158 238.794,247.66 C230.307,243.409 223.659,247.717 216.798,247.447 C221.639,243.303 229.669,244.898 236.75,246.763" fill="#785240" fill-rule="evenodd" id="Fill-59" stroke="none"></path>
+                <path d="M269.978,248.913 C258.828,261.946 239.417,257.612 226.09,249.168 C249.648,268.816 273.172,255.678 285.506,253.401 C291.723,252.252 297.355,255.37 304.207,255.568 C301.213,254.884 299.209,251.991 297.621,250.13 C295.968,248.201 294.68,246.805 291.833,245.618 C289.163,244.504 286.341,244.846 283.676,246.209 C281.066,247.545 276.637,252.247 273.363,252.544 C275.542,250.513 279.214,249.445 278.965,244.767 C278.766,241.002 275.932,240.528 274.909,237.929 C274.737,241.601 273.129,245.232 269.978,248.913" fill="#785240" fill-rule="evenodd" id="Fill-60" stroke="none"></path>
+                <path d="M231.43,251.347 C237.824,254.071 246.573,256.514 253.681,252.83 C259.616,249.751 261.648,245.548 264.021,239.06 C259.718,241.391 257.181,241.509 250.632,245.573 C246.534,248.114 240.027,253.952 229.385,250.449 C237.874,254.7 244.521,250.393 251.382,250.663 C246.541,254.807 238.512,253.211 231.43,251.347" fill="#785240" fill-rule="evenodd" id="Fill-61" stroke="none"></path>
+                <path d="M22.084,246.804 C21.789,246.863 21.786,246.924 22.084,246.882 C106.364,234.562 118.61,261.852 174.004,253.481 C172.662,252.747 171.644,251.926 170.715,250.991 C127.956,256.994 85.406,233.825 22.084,246.804" fill="#785240" fill-rule="evenodd" id="Fill-62" stroke="none"></path>
+                <path d="M446.099,251.226 C361.814,263.543 349.57,236.253 294.171,244.626 C295.515,245.361 296.534,246.18 297.463,247.116 C340.223,241.11 382.774,264.281 446.099,251.302 C446.393,251.243 446.395,251.181 446.099,251.226" fill="#785240" fill-rule="evenodd" id="Fill-63" stroke="none"></path>
+            </svg>
+        </div> -->
+        <!-- 投票隐藏页 -->
+        <div class="row rule">
+            <div class="col-sm-12"><span class="lan-8">{}</span>：</div>
+            <div class="col-sm-12"><span class="lan-71">{}</span></div>
+        </div>
+        <div class="row vote">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                <div class="c-div S_cbdiv_2ddb1611" style="margin-bottom: 0;">
+                    <div class="cst_tabs cst_tabs_borderStyle03 cst_tabs_full c-tabs S_cbtabs_1340c6b1">
+                        <ul class="nav nav-tabs c-tabmenu S_cbtabm_afdaea15" role="tablist">
+                            <li checked="True" class="c-tablink S_cbtabl_1ca35a67 active" data-c-tab="tab1">
+                                <a class="c-tabtextlink S_cbtabt_e8f1d579 " data-toggle="tab" href="#" onclick="changeTab(1)" role="tab"><span>V1</span></a>
+                            </li>
+                            <li checked="False" class="c-tablink S_cbtabl_2d686cb7" data-c-tab="tab2">
+                                <a class="c-tabtextlink S_cbtabt_e8f1d579 " data-toggle="tab" href="#" onclick="changeTab(2)" role="tab">V2</a>
+                            </li>
+                            <li class="c-tablink S_cbtabl_2d686cb7" data-c-tab="tab2">
+                                <a class="c-tabtextlink S_cbtabt_e8f1d579 " data-toggle="tab" href="#" onclick="changeTab(3)" role="tab">V3</a>
+                            </li>
+                            <li checked="False" class="c-tablink S_cbtabl_44c41bee" data-c-tab="tab3">
+                                <a class="c-tabtextlink S_cbtabt_e8f1d579 " data-toggle="tab" href="#" onclick="changeTab(4)" role="tab">V4</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content c-tabcontent S_cbtabc_0679294a">
+                            <!-- 参与 -->
+                            <div class="ui bottom attached tab segment active" data-tab="purchase">
+                                <div class="input-group input-group-lg">
+                                    <input type="text" id="addr" class="form-control ethinput" placeholder="" aria-describedby="sizing-addon1">
+                                    <span class="input-group-addon lan-72" onclick="search()" id="sizing-addon2"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ranking">
+                    <div class="row ranking-item text-left" style="height: 400px;overflow-x: hidden;overflow-y: scroll;">
+
+                    </div>
+                    <div class="row count-input text-center">
+                        <div style="margin: 0 auto;">
+                            <button class="default bsbtn btn-warning btn lan-65" style="width:80%" options="btn-warning" sizes="default" onclick="vote()" type="button"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="row">
+    </div>
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li class="active col-sm-3"><a href="#">V1区</a></li>
+            <li class="col-sm-3"><a href="#">V2区</a></li>
+            <li class="col-sm-3"><a href="#">V3区</a></li>
+            <li class="col-sm-3"><a href="#">V4区</a></li>
+        </ul>
+    </div>
+    <div class="row search">
+        <div class="input-group">
+            <input type="text" class="form-control">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button">搜索</button>
+            </span>
+        </div>
+    </div> -->
+    <div id="loading" class="modal-backdrop fade in">
+        <div class="row" style="height:100%;">
+            <div class="load">
+                <div class="progress pink p-align">
+                    <div class="progress-bar">
+                    </div>
+                    <div class="progress-value"></div>
+                </div>
+                <div class="fusing-error hidden lan-75">
+                    {}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="template" class="hidden">
+        <div class="col-sm-12 num">
+            <span class="lan-73"></span>：
+            <span class="num">{}</span>
+        </div>
+        <div class="col-sm-12 addr" style="overflow-wrap: break-word;">
+            <span class="addr"></span>
+        </div>
+        <div class="col-sm-12 count">
+            <span class="lan-74">{}</span>:
+            <span class="addup-count">
+            </span>
+        </div>
+        <div class="col-sm-12 count-input">
+            <input type="text" class="form-control" data="" placeholder="Input Count（PCC）" />
+        </div>
+        <div class="col-sm-12 line"></div>
+    </div>
+</body>
+<script src="static/store.min.js"></script>
+<script src="js/dividendsAbi.js"></script>
+<script src="js/pccAbi.js"></script>
+<script src="static/bignumber.min.js"></script>
+<script src="static/alertify.js"></script>
+<script src="js/contract_address.js"></script>
+<script src="js/language.js"></script>
+<script src="js/language_handler.js"></script>
+<script src="js/voteAbi.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/vote.js"></script>
+
+</html>
