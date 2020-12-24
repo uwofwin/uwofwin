@@ -109,10 +109,14 @@ subpage-purchase .purchas-keys-buttons div:nth-child(2),
 
 .list-line .ds {
     /*width: 500px;*/
-    height: 230px;
+    height: 180px;
     /*border: 1px solid;*/
     /*overflow-x: scroll;*/
     overflow-y: scroll;
     /*height: auto;*/
     /*overflow: visible;*/
+}
+
+.list-line ::-webkit-scrollbar {
+    display: none;
 }

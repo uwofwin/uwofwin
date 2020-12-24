@@ -59,17 +59,16 @@ async function vote() {
             if (count && count > 0) {
                 addrArr.push($(element).attr("data"));
                 count = web3.utils.toWei(count + "", "ether");
-                countArr.push(parseInt(count));
+                countArr.push(count + "");
             }
         });
-
     if (addrArr.length == 0) {
         alertify.error(tipl[45]);
         return;
     }
 
 
-    var total = sum(countArr);
+    var total = sum(countArr.map(Number));
     var _balance = 0;
 
     await pccInstance.methods.balanceOf(defaultAccount).call().then(balance => {
@@ -78,6 +77,7 @@ async function vote() {
         console.log(err);
         return;
     });
+    console.log(_balance, total);
     if (_balance < total) {
         alertify.error(tipl[34]);
         return;
@@ -106,20 +106,28 @@ async function vote() {
         alertify.error(tipl[46]);
         return;
     }
-
-    pccInstance.methods.approve(voteAddress, total + "").send({
-        from: defaultAccount
-    }).then(() => {
-        voteInstance.methods.doVote(addrArr, countArr).send({
+    console.log("addrArr: ", addrArr);
+    console.log("countArr: ", countArr);
+    pccInstance.methods.allowance(defaultAccount, voteAddress).call().then(async res => {
+        if (res > 0) {
+            await pccInstance.methods.approve(voteAddress, 0).send({
+                from: defaultAccount
+            }, function(err, res) {});
+        }
+        pccInstance.methods.approve(voteAddress, total + "").send({
             from: defaultAccount
-        }).then(res => {
-            window.location.reload();
+        }).then(() => {
+            voteInstance.methods.doVote(addrArr, countArr).send({
+                from: defaultAccount
+            }).then(res => {
+                window.location.reload();
+            }).catch(err => {
+                console.log(err);
+                return;
+            });
         }).catch(err => {
             console.log(err);
-            return;
         });
-    }).catch(err => {
-        console.log(err);
     });
 }
 
@@ -243,11 +251,7 @@ $(document).ready(function() {
 
     async function init() {
 
-
         var p1 = await initBigPPCount();
-
-
-
 
         await checkFusingState();
 
@@ -269,13 +273,13 @@ $(document).ready(function() {
     }
 
 
-    function matchingVote() {
+    async function matchingVote() {
         for (var i in _areas) {
 
             var addresses = _areas[i];
 
 
-            getVoteList(addresses);
+            await getVoteList(addresses);
         }
 
     }
@@ -290,28 +294,28 @@ $(document).ready(function() {
 
     function sorting(arr) {
         var len = arr.length;
-        var minIndex, temp;
+        var maxIndex, temp;
         for (var i = 0; i < len - 1; i++) {
-            minIndex = i;
+            maxIndex = i;
             var addri = arr[i];
             var counti = _players[addri].count;
             for (var j = i + 1; j < len; j++) {
                 var addrj = arr[j];
                 var countj = _players[addrj].count;
-                var addrMin = arr[minIndex];
+                var addrMin = arr[maxIndex];
                 var countMin = _players[addrMin].count;
-                if (countj < countMin) {
-                    minIndex = j;
+                if (countj > countMin) {
+                    maxIndex = j;
                 }
             }
             temp = arr[i];
-            arr[i] = arr[minIndex];
-            arr[minIndex] = temp;
+            arr[i] = arr[maxIndex];
+            arr[maxIndex] = temp;
         }
     }
 
-    function checkFusingState() {
-        return dividendsInstance.methods.getPrizePool(2, bppNum).call().then(bpp => {
+    async function checkFusingState() {
+        await dividendsInstance.methods.getPrizePool(2, bppNum).call().then(bpp => {
             fuseTime = bpp[7];
             if (bpp.length > 0 && fuseTime > 0) {
                 fusing = true;
@@ -327,8 +331,8 @@ $(document).ready(function() {
     }
 
 
-    function getVoteList(addresses) {
-        voteInstance.methods.getVoteInfo(bppNum, fuseTime, addresses).call().then(async arr => {
+    async function getVoteList(addresses) {
+        await voteInstance.methods.getVoteInfo(bppNum, fuseTime, addresses).call().then(async arr => {
             for (var i in addresses) {
                 var addr = addresses[i];
                 var count = arr[i];
@@ -341,18 +345,19 @@ $(document).ready(function() {
     }
 
 
-    function initBigPPCount() {
-        return dividendsInstance.methods.bigPrizePoolCount().call().then(num => {
+    async function initBigPPCount() {
+        await dividendsInstance.methods.bigPrizePoolCount().call().then(num => {
             bppNum = num;
         }).catch(err => {
             console.log(err);
             return;
         });
+        return bppNum;
     }
 
 
-    function initUsers() {
-        return dividendsInstance.methods._playerCount(bppNum).call().then(async count => {
+    async function initUsers() {
+        return await dividendsInstance.methods._playerCount(bppNum).call().then(async count => {
             userCount = count;
             if (count > 0) {
                 for (var i = 1; i <= count; i++) {

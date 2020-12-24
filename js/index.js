@@ -32,6 +32,7 @@ $(document).ready(function() {
         } else {
             invitationAddress = r;
         }
+        console.log("invitationAddress=", invitationAddress);
     } catch (e) {
 
     }
@@ -60,25 +61,50 @@ $(document).ready(function() {
         }
     };
     initLaguage();
-    var inter;
-    var checkNet = async function() {
+
+    function getWeb3Version() {
+        if (!web3) return "0.0";
+        return (typeof web3.version == "string") ? web3.version : web3.version.api;
+    }
+    var checkNet = function() {
         if (isStart) {
             return
         }
-        console.log("init web3...");
-        addLoading();
-        if (window.ethereum) {
-            let ethereum = window.ethereum;
-            web3 = window.web3 = new Web3(ethereum);
+        console.info("[web3]init:", getWeb3Version(), new Date().toISOString());
+        if (!window.ethereum) {
+            // fix for TokenPocket
             try {
-                isStart = true;
-                // await ethereum.enable();
-                handlerWeb3(window.web3);
+                var str = sessionStorage.getItem("ethereum");
+                window.ethereum = JSON.parse(str);
             } catch (error) {
-                console.log("web加载异常", error);
+                console.error("window.ethereum recover failed");
+            }
+        }
+        if (window.ethereum) {
+            try {
+                // fix for TokenPocket
+                sessionStorage.setItem("ethereum", JSON.stringify(window.ethereum));
+            } catch (error) {
+                console.info("window.ethereum save failed", error);
+            }
+            if (!web3 || getWeb3Version() < "1.0") {
+                $.get('web3.min.js', function(res) {
+                    console.info("[web3]ajax:", res.length + "byte", new Date().toISOString());
+                    Web3 = window.Web3 = undefined;
+                    // web3 = window.web3 = undefined;
+                    setTimeout(() => {
+                        eval(res);
+                        window.web3 = web3 = new Web3(ethereum);
+                        console.info("[web3]reload:", getWeb3Version(), new Date().toISOString());
+                        handlerWeb3(window.web3);
+                    }, 618);
+                });
+            } else {
+                handlerWeb3(window.web3);
             }
         } else {
             if (window.web3) {
+                console.info("[web3]currentProvider:", window.web3, web3.currentProvider);
                 web3 = window.web3 = new Web3(web3.currentProvider);
                 isStart = true;
                 handlerWeb3(window.web3);
@@ -89,11 +115,6 @@ $(document).ready(function() {
     };
 
     var handlerWeb3 = function(web3) {
-        console.log(web3.version);
-        if (!web3.eth) {
-            return;
-        }
-
         dividendsInstance = new web3.eth.Contract(dividendsAbi, dividendsAddress);
         pccInstance = new web3.eth.Contract(pccAbi, pccAddress);
         ticketsInstance = new web3.eth.Contract(ticketAbi, ticketAddress);
@@ -112,6 +133,7 @@ $(document).ready(function() {
                 checkLogin()
             }
         })
+
     };
 
 
@@ -155,13 +177,27 @@ $(document).ready(function() {
                 await initPlayer();
                 setPccToUsdtRate();
                 getSmallPoolList();
-                removeLoading();
+                getBigPoolList();
+                // removeLoading();
+                initDividendsBalance();
+                checkVoteView();
             }
         })
     };
 
+    function initDividendsBalance() {
+        usdtInstance.methods.balanceOf(dividendsAddress).call().then(res => {
+            $('#dividendsBalance').html(BN(res / (10 ** 6)).toFixed(6));
+        }).catch(err => {
+            console.log(err);
+            return;
+        });
+    }
+
     async function refreshPlayer() {
-        await ticketsInstance.methods.getPlayerInfo().call({ from: defaultAccount }).then(res => {
+        await ticketsInstance.methods.getPlayerInfo().call({
+            from: defaultAccount
+        }).then(res => {
             player = res;
         }).catch(err => {
             console.log(err);
@@ -172,14 +208,14 @@ $(document).ready(function() {
     async function initPlayer() {
         await refreshPlayer();
         if (player[1] > 0) {
-            ticketsInstance.methods.getReferrerById(player[1]).call().then(res2 => {
+            await ticketsInstance.methods.getReferrerById(player[1]).call().then(res2 => {
                 referrer = res2;
-                isShowRegister();
             }).catch(err => {
                 console.log(err);
                 return;
             });
         }
+        isShowRegister();
         dividendsInstance.methods.getDirectPushs(player[0]).call().then(re3 => {
             $(".my-recomand-count").html(re3.length);
         }).catch(err => {
@@ -234,7 +270,7 @@ $(document).ready(function() {
     $("#settleAmbassador").click(function() {
         ticketsInstance.methods.settleAmbassador().send({
             from: defaultAccount,
-            gas: 800000
+            gas: 3000000
         }).then(res => {
 
             window.location.reload();
@@ -358,7 +394,7 @@ $(document).ready(function() {
         if (bigPoolPrize.length > 0 && fuseTime > 0) {
             $('.vote').removeClass('hidden');
             voteInstance.methods.getTotalVoteNum(bppNum, fuseTime, defaultAccount).call().then(bal => {
-                let pccValue = web3.utils.toWei(bal + "", "ether");
+                let pccValue = web3.utils.fromWei(bal + "", "ether");
                 $('.votePccBalance').html(pccValue);
             }).catch(err => {
                 console.log(err);
@@ -477,65 +513,6 @@ $(document).ready(function() {
 
     }
 
-
-    $("#pccToUsdtRateSubmit").click(function() {
-        var pccToUsdtRateInput = $("#pccToUsdtRate").val();
-        if (pccToUsdtRateInput == "") {
-            alertify.error(tipl[24]);
-            return false;
-        }
-        var regNumber = /^[0-9]{1,10}\.{0,1}\d{0,5}$/;
-        if (!regNumber.test(pccToUsdtRateInput)) {
-            alertify.error(tipl[25]);
-            return false;
-        }
-        if (pccToUsdtRateInput <= pccToUsdtRate) {
-            alertify.error(tipl[26] + pccToUsdtRate + tipl[27]);
-            return false;
-        }
-
-        var value = (pccToUsdtRateInput * pccUsdtBase).toFixed(0);
-        ticketsInstance.methods.updatePccToUsdtRate(value).send({
-            from: defaultAccount,
-            gas: 620000
-        }).then(res => {
-            alertify.success(tipl[22]);
-            window.location.reload();
-        }).catch(err => {
-            alertify.error(tipl[23]);
-        });
-    });
-
-
-    $("#staticRateSubmit").click(function() {
-        var staticRate = $("#staticRate").val();
-        if (staticRate == "") {
-            alertify.error(tipl[24]);
-            return false;
-        }
-        var regNumber = /^[0-9]{1,10}\.{0,1}\d{0,1}$/;
-        if (!regNumber.test(staticRate)) {
-            alertify.error(tipl[30]);
-            return false;
-        }
-        let staticRateNum = staticRate * 10;
-        if (staticRateNum < 3 || staticRateNum > 22) {
-            alertify.error(tipl[31]);
-            return false;
-        }
-        ticketsInstance.methods.updateStaticRate(staticRateNum).send({
-            from: defaultAccount,
-            gas: 500000
-        }).then(res => {
-            alertify.success(tipl[22]);
-
-            window.location.reload();
-        }).catch(err => {
-            alertify.error(tipl[23]);
-        });
-    });
-
-
     function setPccToUsdtRate() {
         ticketsInstance.methods.getPccToUsdtRate().call().then(res => {
             pccToUsdtRate = res / pccUsdtBase;
@@ -644,7 +621,7 @@ $(document).ready(function() {
                             if (!err2) {
                                 dividendsInstance.methods.investment(usdtEtherValue, invitationAddress).send({
                                     from: defaultAccount,
-                                    gas: 1200000
+                                    gas: 2000000
                                 }).then(res3 => {
                                     window.location.reload();
                                 }).catch(err => {
@@ -752,7 +729,7 @@ $(document).ready(function() {
                     if (!err) {
                         ticketsInstance.methods.buyTicket(usdtEtherValue).send({
                             from: defaultAccount,
-                            gas: 620000
+                            gas: 1200000
                         }).then(res => {
                             window.location.reload();
                         }).catch(err => {
@@ -803,7 +780,7 @@ $(document).ready(function() {
                 if (!err) {
                     ticketsInstance.methods.recharge(pccEtherValue).send({
                         from: defaultAccount,
-                        gas: 620000
+                        gas: 1200000
                     }).then(res => {
                         window.location.reload();
                     }).catch(err => {
@@ -869,7 +846,7 @@ $(document).ready(function() {
         }
         ticketsInstance.methods.settleStatic().send({
             from: defaultAccount,
-            gas: 620000
+            gas: 2000000
         }).then(function(res) {
             window.location.reload();
         }).catch(err => {
@@ -901,6 +878,7 @@ $(document).ready(function() {
         //     checkNet();
         // }, 3000);
 
+        // checkVoteView();
     };
 
 
@@ -913,7 +891,7 @@ $(document).ready(function() {
 
         dividendsInstance.methods.withdrawPerBalance().send({
             from: defaultAccount,
-            gas: 620000
+            gas: 1200000
         }).then(function(res) {
             window.location.reload();
         }).catch(err => {
@@ -929,7 +907,7 @@ $(document).ready(function() {
         }
         dividendsInstance.methods.withdrawWinBalance().send({
             from: defaultAccount,
-            gas: 620000
+            gas: 1200000
         }).then(function(res) {
             window.location.reload();
         }).catch(err => {
@@ -945,7 +923,7 @@ $(document).ready(function() {
         }
         dividendsInstance.methods.withdrawTeamBalance().send({
             from: defaultAccount,
-            gas: 620000
+            gas: 1200000
         }).then(function(res) {
             window.location.reload();
         }).catch(err => {
@@ -962,7 +940,7 @@ $(document).ready(function() {
         }
         dividendsInstance.methods.withdrawAmbassBalance().send({
             from: defaultAccount,
-            gas: 620000
+            gas: 1200000
         }).then(function(res) {
             window.location.reload();
         }).catch(err => {
@@ -977,9 +955,64 @@ $(document).ready(function() {
             location.href = "./my.html?defaultAccount=" + defaultAccount
         }
     });
+    $("#toWithdrawId").click(async function() {
+        let isFuse = bigPoolPrize[6];
+        let fuseTime = bigPoolPrize[7];
+        let rebootTime = bigPoolPrize[8];
 
-    init()
+        let numZero = 0;
+        let notTick = 0;
+        await voteInstance.methods.getTotalVoteNum(bigPoolPrizeCount, fuseTime, defaultAccount).call().then(bal => {
+            let pccValue = web3.utils.fromWei(bal + "", "ether");
+            if (pccValue == 0) {
+                numZero = 1;
+            }
+        }).catch(err => {
+            console.log(err);
+            return;
+        });
+        if (numZero == 1) {
+            alertify.error(tipl[47]);
+            return;
+        }
+
+        if (isFuse == 0 && rebootTime > 0) {
+            voteInstance.methods.withdraw().send({
+                from: defaultAccount
+            }).then(function(ress) {
+                window.location.reload();
+            }).catch(err => {
+                console.log(err);
+            });
+        } else {
+            notTick = 1;
+
+        }
+        if (notTick == 1) {
+            alertify.error(tipl[48]);
+            return;
+        }
+
+    });
+
+    function checkVoteView() {
+        //await initBigPoolPrize();
+        let isFuse = bigPoolPrize[6];
+        let fuseTime = bigPoolPrize[7];
+        let rebootTime = bigPoolPrize[8];
+        console.log(isFuse, fuseTime, rebootTime);
+        if (isFuse == 1 || (isFuse == 0 && rebootTime > 0)) {
+            $("#voteDiv").removeClass("hidden");
+        }
+    };
+    $("#toTrans").click(function() {
+        tranfersDividends();
+    });
+    init();
+
 });
+
+
 
 function getPoolList(type) {
     addLoading();

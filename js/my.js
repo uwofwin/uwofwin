@@ -130,8 +130,16 @@ $(document).ready(function() {
         })
     }
 
-    async function getMySts(addr) {
-        await ticketsInstance.methods.getPlayerInfo().call({ from: defaultAccount }).then(res => {
+    async function getMySts() {
+        let addr = new URLSearchParams(window.location.search).get('defaultAccount');
+        var id = 0;
+        await dividendsInstance.methods.getIdByAddr(addr).call().then(res => {
+            id = res;
+        }).catch(err => {
+            console.log(err);
+            return;
+        });
+        await dividendsInstance.methods.getPlayerById(id).call().then(res => {
             player = res;
         }).catch(err => {
             console.log(err);
@@ -165,7 +173,7 @@ $(document).ready(function() {
             type: 'post',
             dataType: 'json',
             crossDomain: true,
-            url: url + "/v1/contract/getMySts?userId=" + player[0],
+            url: url + "/v1/contract/getMySts?userId=" + id,
             headers: {
                 "X-Requested-With": "XMLHttpRequest"
             },
