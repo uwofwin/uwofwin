@@ -270,7 +270,7 @@ $(document).ready(function() {
     $("#settleAmbassador").click(function() {
         ticketsInstance.methods.settleAmbassador().send({
             from: defaultAccount,
-            gas: 3000000
+            gas: 1500000
         }).then(res => {
 
             window.location.reload();
@@ -621,7 +621,7 @@ $(document).ready(function() {
                             if (!err2) {
                                 dividendsInstance.methods.investment(usdtEtherValue, invitationAddress).send({
                                     from: defaultAccount,
-                                    gas: 2000000
+                                    gas: 1500000
                                 }).then(res3 => {
                                     window.location.reload();
                                 }).catch(err => {
