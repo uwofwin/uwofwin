@@ -270,7 +270,7 @@ $(document).ready(function() {
     $("#settleAmbassador").click(function() {
         ticketsInstance.methods.settleAmbassador().send({
             from: defaultAccount,
-            gas: 5000000
+            gas: 1500000
         }).then(res => {
 
             window.location.reload();
@@ -846,7 +846,7 @@ $(document).ready(function() {
         }
         ticketsInstance.methods.settleStatic().send({
             from: defaultAccount,
-            gas: 2000000
+            gas: 1200000
         }).then(function(res) {
             window.location.reload();
         }).catch(err => {
@@ -891,7 +891,7 @@ $(document).ready(function() {
 
         dividendsInstance.methods.withdrawPerBalance().send({
             from: defaultAccount,
-            gas: 1200000
+            gas: 800000
         }).then(function(res) {
             window.location.reload();
         }).catch(err => {
@@ -907,7 +907,7 @@ $(document).ready(function() {
         }
         dividendsInstance.methods.withdrawWinBalance().send({
             from: defaultAccount,
-            gas: 1200000
+            gas: 800000
         }).then(function(res) {
             window.location.reload();
         }).catch(err => {
@@ -923,7 +923,7 @@ $(document).ready(function() {
         }
         dividendsInstance.methods.withdrawTeamBalance().send({
             from: defaultAccount,
-            gas: 1200000
+            gas: 800000
         }).then(function(res) {
             window.location.reload();
         }).catch(err => {
@@ -940,7 +940,7 @@ $(document).ready(function() {
         }
         dividendsInstance.methods.withdrawAmbassBalance().send({
             from: defaultAccount,
-            gas: 1200000
+            gas: 800000
         }).then(function(res) {
             window.location.reload();
         }).catch(err => {
