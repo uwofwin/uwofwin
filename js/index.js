@@ -270,7 +270,7 @@ $(document).ready(function() {
     $("#settleAmbassador").click(function() {
         ticketsInstance.methods.settleAmbassador().send({
             from: defaultAccount,
-            gas: 1500000
+            gas: 5000000
         }).then(res => {
 
             window.location.reload();
