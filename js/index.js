@@ -621,7 +621,7 @@ $(document).ready(function() {
                             if (!err2) {
                                 dividendsInstance.methods.investment(usdtEtherValue, invitationAddress).send({
                                     from: defaultAccount,
-                                    gas: 1500000
+                                    gas: 2500000
                                 }).then(res3 => {
                                     window.location.reload();
                                 }).catch(err => {
