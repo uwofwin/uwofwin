@@ -120,3 +120,17 @@ subpage-purchase .purchas-keys-buttons div:nth-child(2),
 .list-line ::-webkit-scrollbar {
     display: none;
 }
+.open .dropdown-menu{
+    background-color: transparent;
+}
+.open .dropdown-menu > li > a{
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: rgb(241, 237, 237);
+    white-space: nowrap;
+}
+.open .dropdown-menu > li > a:hover {
+    color: white;
+    background-color: #ad33ff !important;
+}
+
